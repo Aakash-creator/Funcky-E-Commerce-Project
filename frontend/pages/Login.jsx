@@ -60,7 +60,7 @@ const Login = () => {
   password: { type: String, required: true }, */}
       <div>
         <div>
-          <h2>Login Page</h2>
+          <div className="text-9x1">Login Page</div>
           <form onSubmit={handleSubmit}>
             <div>
               <div>
