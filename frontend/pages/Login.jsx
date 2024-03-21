@@ -55,12 +55,9 @@ const Login = () => {
 
   return (
     <>
-      {/* name: { type: String, required: true },
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, */}
       <div>
         <div>
-          <div className="text-9x1">Login Page</div>
+          <p className="text-8xl	text-red-600	">Login Page</p>
           <form onSubmit={handleSubmit}>
             <div>
               <div>

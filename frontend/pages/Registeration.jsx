@@ -57,13 +57,13 @@ const Registeration = () => {
   };
 
   return (
-    <>
+    <div>
       {/* name: { type: String, required: true },
       username: { type: String, required: true, unique: true },
       password: { type: String, required: true }, */}
       <div>
         <div>
-          <h2>Registration Page</h2>
+          <p className="text-8xl	text-red-600">Registration Page</p>
           <form onSubmit={handleSubmit}>
             <div>
               <div>
@@ -118,7 +118,7 @@ const Registeration = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

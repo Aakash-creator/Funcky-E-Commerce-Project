@@ -1,3 +1,4 @@
-1. Create Routing frontend
-2. Add Roles admin,user,owner 
+1. Create Routing frontend  // basic routing done
+2. Add Roles admin,user,owner //Done
 3. Create Database Schema Full 
+4. fix tailwind not working 
