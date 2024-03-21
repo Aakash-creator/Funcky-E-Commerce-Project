@@ -1,5 +1,22 @@
+import { Link } from "react-router-dom";
+
 const Navbar = () => {
-  return <div>Navbar</div>;
+  return (
+    <>
+      <header>
+        <nav>
+          {/* add navbar code here */}
+          Navbar cart login
+          <Link to="/">Home</Link>
+          {/* error at / route  */}
+          <Link to="/login">Login</Link>
+          <Link to="/register">Register</Link>
+          <Link to="/about">About</Link>
+          <Link to="/Contact">Contact</Link>
+        </nav>
+      </header>
+    </>
+  );
 };
 
 export default Navbar;
