@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 //get user data as profile
 
 const UserData = async (req, res) => {
-  const { username } = req.body;
+  const { email } = req.body;
   res.status(200).json(username);
   try {
   } catch (err) {
@@ -17,19 +17,19 @@ const UserData = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const isThere = await register.findOne({ username });
+    const { email, password } = req.body;
+    const isThere = await register.findOne({ email });
 
     if (isThere === null) {
       res.json("User does not exist, register user before trying"); //.status(400)
     } else {
       const userId = isThere._id;
-      if (isThere.username === username) {
+      if (isThere.email === email) {
         if (await bcrypt.compare(password, isThere.password)) {
-          const accesstoken = JWT.sign({ username, userId }, process.env.JWTACCESSTOKENSECRET, {
+          const accesstoken = JWT.sign({ email, userId }, process.env.JWTACCESSTOKENSECRET, {
             expiresIn: "10m",
           });
-          const refreshtoken = JWT.sign({ username, userId }, process.env.JWTREFRESHTOKENSECRET, {
+          const refreshtoken = JWT.sign({ email, userId }, process.env.JWTREFRESHTOKENSECRET, {
             expiresIn: "12m",
           });
 
@@ -46,7 +46,7 @@ const loginUser = async (req, res) => {
             secure: true,
             sameSite: "Strict",
           });
-          res.status(200).json("Login Sucessfull!"); // for testing send accesstoken, refreshtoken
+          res.status(200).json("Login Sucessfull!", accesstoken, refreshtoken); // for testing send accesstoken, refreshtoken
         } else {
           res.json("Incorrect Credentials");
         }
@@ -60,21 +60,21 @@ const loginUser = async (req, res) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { name, username, password } = req.body;
+    const { name, email, password } = req.body;
     const role = "User";
-    const isThere = await register.findOne({ username }); //check if user exists returns an object|null
+    const isThere = await register.findOne({ email }); //check if user exists returns an object|null
 
     if (isThere === null) {
       //if null then then user does not exist
       const hashPass = await bcrypt.hash(password, 12);
-      const data = await register.create({ name, username, password: hashPass }).then((dt) => {
+      const data = await register.create({ name, email, password: hashPass, role }).then((dt) => {
         //create register user
-        console.log(dt); // remove later
-        res.status(201).json(dt);
+        // console.log(dt); // remove later
+        res.status(201).json("User Created Sucessfully");
       });
     } else {
-      if (isThere.username === username) {
-        res.json(`User already exist using username ${username}, try other usernames`);
+      if (isThere.email === email) {
+        res.json(`User already exist using email ${email}, try other usernames`);
       }
     }
   } catch (err) {

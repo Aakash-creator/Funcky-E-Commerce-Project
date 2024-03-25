@@ -1,4 +1,10 @@
 1. Create Routing frontend  // basic routing done
 2. Add Roles admin,user,owner //Done
+4. fix tailwind not working  // done
+
 3. Create Database Schema Full 
-4. fix tailwind not working 
+5. make a logo 
+6. watch formik videos 
+7. create userStories both Admin and Users
+8. 
+9.  
