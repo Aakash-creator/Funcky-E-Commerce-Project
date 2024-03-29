@@ -2,9 +2,9 @@
 2. Add Roles admin,user,owner //Done
 4. fix tailwind not working  // done
 
-3. Create Database Schema Full 
-5. make a logo 
-6. watch formik videos 
+3. Create Database Schema Full
+5. make a logo
+6. watch formik and yup videos
 7. create userStories both Admin and Users
 8. 
-9.  
+9. 

@@ -9,6 +9,7 @@ import Login from "../pages/Login";
 import Registeration from "../pages/Registeration";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Dashboard from "../pages/admin/Dashboard";
 
 function App() {
   return (
@@ -28,6 +29,8 @@ function App() {
               <Route path="/contact" element={<Contact />} />
             </Route>
           </Route>
+
+          <Route path="/dashboard" element={<Dashboard />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registeration />} />

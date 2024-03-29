@@ -33,16 +33,20 @@ const Login = () => {
           }
         )
         .then((result) => {
-          if (result.data == "User does not exist, register user before trying") {
-            console.log("User does not exist, register user before trying");
+          if (result.data == "Admin") {
+            navigate("/dashboard");
           } else {
-            if (result.data == "Incorrect Credentials") {
-              console.log("Incorrect Credentials");
+            if (result.data == "User does not exist, register user before trying") {
+              console.log("User does not exist, register user before trying");
             } else {
-              if (result.data == "Login Sucessfull!") {
-                console.log("Login Sucessfull!");
+              if (result.data == "Incorrect Credentials") {
+                console.log("Incorrect Credentials");
+              } else {
+                if (result.data == "Login Sucessfull!") {
+                  console.log("Login Sucessfull!");
 
-                navigate("/category");
+                  navigate("/category");
+                }
               }
             }
           }

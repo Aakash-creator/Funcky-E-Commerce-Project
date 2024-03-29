@@ -4,6 +4,12 @@ const Navbar = () => {
   return (
     <>
       <header>
+        <section>
+          <p>find a store</p>
+          <p>Help</p>
+          <p>join us</p>
+          <p>Sign in</p>
+        </section>
         <nav>
           {/* add navbar code here */}
           <Link to="/">Home</Link>
