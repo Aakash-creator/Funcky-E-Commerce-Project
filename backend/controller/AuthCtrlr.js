@@ -1,4 +1,4 @@
-const { login, register } = require("../models/AuthModel");
+const { login, user } = require("../models/AuthModel");
 const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -18,7 +18,7 @@ const UserData = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const isThere = await register.findOne({ email });
+    const isThere = await user.findOne({ email });
 
     if (isThere === null) {
       res.json("User does not exist, register user before trying"); //.status(400)
@@ -46,7 +46,11 @@ const loginUser = async (req, res) => {
             secure: true,
             sameSite: "Strict",
           });
-          res.status(200).json("Login Sucessfull!", accesstoken, refreshtoken); // for testing send accesstoken, refreshtoken
+          if (isThere.role === "Admin") {
+            res.status(200).json("Admin");
+          } else {
+            res.status(200).json("Login Sucessfull!");
+          } // for testing send accesstoken, refreshtoken , accesstoken, refreshtoken
         } else {
           res.json("Incorrect Credentials");
         }
@@ -62,20 +66,23 @@ const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const role = "User";
-    const isThere = await register.findOne({ email }); //check if user exists returns an object|null
-
-    if (isThere === null) {
-      //if null then then user does not exist
-      const hashPass = await bcrypt.hash(password, 12);
-      const data = await register.create({ name, email, password: hashPass, role }).then((dt) => {
-        //create register user
-        // console.log(dt); // remove later
-        res.status(201).json("User Created Sucessfully");
-      });
-    } else {
-      if (isThere.email === email) {
-        res.json(`User already exist using email ${email}, try other usernames`);
+    const isThere = await user.findOne({ email }); //check if user exists returns an object|null
+    if (name && email && password) {
+      if (isThere === null) {
+        //if null then then user does not exist
+        const hashPass = await bcrypt.hash(password, 12);
+        const data = await user.create({ name, email, password: hashPass, role }).then((dt) => {
+          //create user user
+          // console.log(dt); // remove later
+          res.status(201).json("User Created Sucessfully");
+        });
+      } else {
+        if (isThere.email === email) {
+          res.json(`User already exist using email ${email}, try other usernames`);
+        }
       }
+    } else {
+      res.json("Name, Email and Password required.");
     }
   } catch (err) {
     console.log(err);
@@ -97,15 +104,11 @@ const isUserValid = async (req, res, next) => {
             console.log(err);
             return res.status(401).json({ valid: false, message: "Invalid refresh token" });
           } else {
-            username = decode.username;
+            email = decode.useremail;
             userId = decode.userId;
-            const newAccessToken = JWT.sign(
-              { username, userId },
-              process.env.JWTACCESSTOKENSECRET,
-              {
-                expiresIn: "10s",
-              }
-            );
+            const newAccessToken = JWT.sign({ email, userId }, process.env.JWTACCESSTOKENSECRET, {
+              expiresIn: "10m",
+            });
 
             res.cookie("accesstoken", newAccessToken, {
               maxAge: 60000,
@@ -131,62 +134,5 @@ const isUserValid = async (req, res, next) => {
     return res.status(500).send("Internal Server Error");
   }
 };
-
-// const isUserValid = async (req, res, next) => {
-//   try {
-//     const accesstoken = req.cookies.accesstoken;
-//     if (!accesstoken) {
-//       renewToken(req, res, next);
-//       next();
-//     } else {
-//       JWT.verify(accesstoken, process.env.JWTACCESSTOKENSECRET, (err, decode) => {
-//         if (err) {
-//           console.log(err);
-//           res.status(401).json({ valid: false, message: "Invalid access token" });
-//         } else {
-//           res.status(200).json({ msg: "Accesstoken Valid" });
-//           next();
-//         }
-//       });
-//     }
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).send("Internal Server Error");
-//   }
-// };
-
-// const renewToken = async (req, res, next) => {
-//   try {
-//     const refreshtoken = req.cookies.refreshtoken;
-//     if (refreshtoken) {
-//       JWT.verify(refreshtoken, process.env.JWTREFRESHTOKENSECRET, (err, decode) => {
-//         if (err) {
-//           console.log(err);
-//           res.status(401).json({ valid: false, message: "Invalid refresh token" });
-//         } else {
-//           username = decode.username;
-//           userId = decode.userId;
-//           const accesstoken = JWT.sign({ username, userId }, process.env.JWTACCESSTOKENSECRET, {
-//             expiresIn: "10s",
-//           });
-
-//           res.cookie("accesstoken", accesstoken, {
-//             maxAge: 60000,
-//             httpOnly: true,
-//             secure: true,
-//           });
-//           res.status(200).json({ msg: "Accesstoken Renewed" });
-//           next();
-//         }
-//       });
-//     } else {
-//       // res.status(401).json({ valid: false, message: "No token provided" });
-//       next();
-//     }
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).send("Internal Server Error");
-//   }
-// };
 
 module.exports = { loginUser, registerUser, isUserValid, UserData };

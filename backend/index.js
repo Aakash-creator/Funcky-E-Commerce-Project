@@ -9,8 +9,10 @@ app.use(cors());
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
-const auth = require("./routes/Auth");
-app.use(auth);
+
+const user = require("./routes/user/User");
+app.use(user);
+
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
