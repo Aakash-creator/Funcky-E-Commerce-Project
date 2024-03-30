@@ -1,11 +1,7 @@
 const mongoose = require("mongoose");
+const { Schema } = require("mongoose");
 
-const loginModel = new mongoose.Schema({
-  email: { type: String, required: true },
-  password: { type: String, required: true },
-});
-
-const addressSchema = new mongoose.Schema(
+const addressSchema = Schema(
   {
     adresstype: {
       type: String,
@@ -23,21 +19,21 @@ const addressSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const registerModel = new mongoose.Schema(
+const registerModel = Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     emailverified: { type: Boolean, default: false },
     password: { type: String, required: true },
     role: { type: String, enum: ["Admin", "User", "Owner"], default: "User" },
-    address: { type: mongoose.Schema.Types.ObjectId, ref: "address" },
+    address: { type: Schema.Types.ObjectId, ref: "address" },
     // cart:{}
+    deleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
 const address = mongoose.model("address", addressSchema);
-const login = mongoose.model("login", loginModel);
 const user = mongoose.model("user", registerModel);
 
-module.exports = { login, user, address };
+module.exports = { user, address };

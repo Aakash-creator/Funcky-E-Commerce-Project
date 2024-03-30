@@ -1,4 +1,4 @@
-const { login, user } = require("../models/AuthModel");
+const { user } = require("../models/AuthModel");
 const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -27,10 +27,10 @@ const loginUser = async (req, res) => {
       if (isThere.email === email) {
         if (await bcrypt.compare(password, isThere.password)) {
           const accesstoken = JWT.sign({ email, userId }, process.env.JWTACCESSTOKENSECRET, {
-            expiresIn: "10m",
+            expiresIn: "10h",
           });
           const refreshtoken = JWT.sign({ email, userId }, process.env.JWTREFRESHTOKENSECRET, {
-            expiresIn: "12m",
+            expiresIn: "12h",
           });
 
           res.cookie("accesstoken", accesstoken, {
@@ -104,8 +104,8 @@ const isUserValid = async (req, res, next) => {
             console.log(err);
             return res.status(401).json({ valid: false, message: "Invalid refresh token" });
           } else {
-            email = decode.useremail;
-            userId = decode.userId;
+            const email = decode.useremail;
+            const userId = decode.userId;
             const newAccessToken = JWT.sign({ email, userId }, process.env.JWTACCESSTOKENSECRET, {
               expiresIn: "10m",
             });

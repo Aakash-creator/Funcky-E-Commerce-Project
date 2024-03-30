@@ -25,9 +25,12 @@ const productSchema = new mongoose.Schema(
     description: String, //add a max words 300 limit here,
     productCode: String,
     netQuantity: { type: Number, required: trues },
+    deleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
 const review = mongoose.model("Review", reviewSchema);
 const product = mongoose.model("Product", productSchema);
+
+module.exports = { product, review };
